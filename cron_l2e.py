@@ -7,6 +7,8 @@ import datetime
 import requests
 import json
 
+#This is the script run by crontab every midnight
+
 import sqlite3
 
 def connect_database():
