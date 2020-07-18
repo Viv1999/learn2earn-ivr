@@ -7,6 +7,8 @@ import datetime
 import requests
 import json
 
+#This is the agi script run after the end of the call
+
 import sqlite3
 
 def connect_database():
