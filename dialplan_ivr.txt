@@ -1,0 +1,131 @@
+[ivr-learn2earn]
+exten => s,1,Answer(500)
+   same => n,Set(CORRECT3=${RAND(1,2)})
+   same => n,Set(CORRECT4=${RAND(1,2)})
+   same => n,Set(RINTRO=r)
+   same => n,Set(RQ1=r)
+   same => n,Set(RQ2=r)
+   same => n,Set(RQ3=r)
+   same => n,Set(RQ4=r)
+   same => n,Set(PERMISSION=0)
+   same => n,Set(CHANNEL(hangup_handler_push)=hhdlr,s,1(args))
+   same => n,Goto(ivr-start,s,1)
+
+[ivr-start]
+exten => s,1,NoOp(ivr-start)
+   same => n,Background(intro)
+   same => n,WaitExten(5)
+
+
+exten => 1,1,NoOp(intro-1)
+   ;same => n,SayNumber(1)
+   same => n,Set(RINTRO=$[${RINTRO}1])
+   same => n,NoOp(${RINTRO})
+   same => n,Goto(ivr-learn2earn-q1,s,1)
+
+exten => 2,1,NoOp(intro-2)
+   ;same => n,SayNumber(2)
+   same => n,Set(RINTRO=$[${RINTRO}2])
+   same => n,Hangup()
+
+exten => e,1,NoOp(Invalid or no entry)
+   same => n,Goto(s,1)
+
+[hhdlr]
+exten => s,1,NoOp(hhdlr)
+   same => n,AGI(learn2earnivr.py)
+
+
+
+
+[ivr-learn2earn-q1]
+exten => s,1,NoOp(q1)
+   same => n,Background(q1)
+   same => n,WaitExten(5)
+
+exten => 1,1,NoOp(q1-1)
+   same => n,Set(RQ1=$[${RQ1}1])
+   same => n,Goto(ivr-learn2earn-q2,s,1)
+
+exten => 2,1,NoOp(q1-2)
+   same => n,Set(RQ1=$[${RQ1}2])
+   same => n,Playback(notq)
+   same => n,Goto(ivr-learn2earn-q1,s,1)
+
+exten => e,1,NoOp(Invalid or no entry)
+   same => n,Goto(s,1)
+
+[ivr-learn2earn-q2]
+exten => s,1,NoOp(q2)
+   same => n,Background(q2)
+   same => n,WaitExten(5)
+
+exten => 2,1,NoOp(q2-2)
+   same => n,Set(RQ2=$[${RQ2}2])
+   same => n,Goto(ivr-learn2earn-q3,s,1)
+
+exten => 1,1,NoOp(q2-1)
+   same => n,Set(RQ2=$[${RQ2}1])
+   same => n,Playback(notq)
+   same => n,Goto(ivr-learn2earn-q2,s,1)
+
+exten => e,1,NoOp(Invalid or no entry)
+   same => n,Goto(s,1)
+
+[ivr-learn2earn-q3]
+exten => s,1,NoOp(q3)
+   ;same => n,Set(CORRECT=1)
+   same => n,Background(q3)
+   same => n,WaitExten(5)
+exten => 1,1,NoOp(q3-1)
+   same => n,Set(RQ3=$[${RQ3}1])
+   same => n,NoOp(${RQ3})
+   same => n,GotoIf($[${CORRECT3}=1]?ivr-learn2earn-q4,s,1:ivr-wrong-3,s,1)
+exten => 2,1,NoOp(q3-2)
+   same => n,Set(RQ3=$[${RQ3}2])
+   same => n,GotoIf($[${CORRECT3}=2]?ivr-learn2earn-q4,s,1:ivr-wrong-3,s,1)
+exten => e,1,NoOp(Invalid or no entry)
+   same => n,Goto(s,1)
+
+[ivr-wrong-3]
+exten => s,1,NoOp(Wrong-3)
+   same => n,Playback(notq)
+   same => n,Goto(ivr-learn2earn-q3,s,1)
+
+[ivr-learn2earn-q4]
+exten => s,1,NoOp(q4)
+   same => n,Background(q4)
+   same => n,WaitExten(5)
+exten => 1,1,NoOp(q4-1)
+   same => n,Set(RQ4=$[${RQ4}1])
+   same => n,GotoIf($[${CORRECT4}=1]?ivr-learn2earn-permission,s,1:ivr-wrong-4,s,1)
+exten => 2,1,NoOp(q4-2)
+   same => n,Set(RQ4=$[${RQ4}2])
+   same => n,GotoIf($[${CORRECT4}=2]?ivr-learn2earn-permission,s,1:ivr-wrong-4,s,1)
+
+[ivr-wrong-4]
+exten => s,1,NoOp(Wrong-4)
+   same => n,Playback(notq)
+   same => n,Goto(ivr-learn2earn-q4,s,1)
+
+
+[ivr-learn2earn-permission]
+exten => s,1,NoOp(permission)
+   same => n,Background(permission)
+   same => n,WaitExten(5)
+exten => 1,1,NoOp(permission-1)
+   same => n,Set(PERMISSION=1)
+   same => n,Playback(endquiz)
+   same => n,Hangup
+; exten => h,1,AGI(learn2earnivr.py)
+  ; same => n,Hangup
+
+exten => 2,1,NoOp(permission-2)
+   same => n,Set(PERMISSION=2)
+   same => n,Playback(endquiz)
+   same => n,Hangup
+;exten => h,1,AGI(learn2earnivr.py)
+  ; same => n,Hangup
+
+exten => e,1,NoOp(Invalid or no entry)
+   same => n,Goto(s,1)
