@@ -1,3 +1,5 @@
+;file location /etc/asterisk/extensions.conf
+;The dial plan created for the ivr
 [ivr-learn2earn]
 exten => s,1,Answer(500)
    same => n,Set(CORRECT3=${RAND(1,2)})
