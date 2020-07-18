@@ -8,6 +8,7 @@ import requests
 import json
 
 #This is the agi script run after the end of the call
+#location: /var/lib/asterisk/agi-bin/
 
 import sqlite3
 
