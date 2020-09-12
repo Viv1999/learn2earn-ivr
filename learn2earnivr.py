@@ -35,7 +35,7 @@ def HLR(number,conn):
                     if op in lookup_query:
                         dict_HLR_op_code_new[mccmnc]=op_code_map[HLR_to_op[op]]
 
-            hlr_response=requests.get("http://share-env-1.ap-south-1.elasticbeanstalk.com/lookup/?number=" + str(number))
+            hlr_response=requests.get("" + str(number)) #url removed for sercurity reasons 
             h_r=json.loads(hlr_response.text)
             
             mccmnc=h_r["results"][0]["mccmnc"]
